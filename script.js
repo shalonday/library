@@ -16,6 +16,9 @@ function Book(title, author, pages, read){
   this.header.className = "card-title";
   this.para = document.createElement("p");
   this.para.className = "card-text";
+  this.removeButton = document.createElement("button");
+  this.removeButton.textContent = "Remove Book";
+  this.removeButton.setAttribute('onclick', `Book.prototype.removeBookFromLibrary(\'${this.title}\')`); // how to reference this object from outside?
 
   // create text nodes for title and text
   let finished;
@@ -34,13 +37,12 @@ function Book(title, author, pages, read){
   // append elements to their parents
   this.body.appendChild(this.header);
   this.body.appendChild(this.para);
+  this.body.appendChild(this.removeButton);
   this.card.appendChild(this.body);
    
 }
 //tasks: 
-//define Book.prototype.display
 //define Book.prototype.removeBookFromLibrary
-//define DOM elements for each book in the book constructor
 Book.prototype.info = function(){
   let str_init = this.title + " by " + this.author + ", " + this.pages + " pages.";
   let str_sec;
@@ -56,14 +58,10 @@ Book.prototype.display = function(){
   document.body.appendChild(this.card);
 }
 
-Book.prototype.removeBookFromLibrary = function (){
-  //find book in library where title == this.title then pop
-  let book = library.find(function(book){
-    if (book.title == this.title){
-      return true;
-    }
-  });
-  
+Book.prototype.removeBookFromLibrary = function (title){
+  // remove book from library with title. opted not to use "this" since it complicated things...
+  let bookIndex = library.findIndex( (book) => book.title == title );
+  library.splice(bookIndex, 1);
 }
 
 function openForm(){
@@ -124,56 +122,9 @@ function addBookToLibrary(title, author, pages, read){
 function displayLibrary(){
   clearDisplay();
 
-  /*
-  let cardList = [];  // card divs
-  let bodyList = [];  // card-body divs
-  let titleList = []; // h5's
-  let paraList = [];  // p's
-  let paraNodes = []; // text nodes for paras
-  let titleNodes = [];// text nodes for titles
-  let finished;
-  */
-
   library.forEach(function(book){
     book.display();
   });
-
-  /*
-
-  library.forEach(function(book, index, arr){
-    // create card elements (card div, card body div, card title h5, card text p)
-    cardList[index] = document.createElement("div");
-    cardList[index].className = "card";
-    cardList[index].style.width = "18rem";
-    bodyList[index] = document.createElement("div");
-    bodyList[index].className = "card-body";
-    titleList[index] = document.createElement("h5");
-    titleList[index].className = "card-title";
-    paraList[index] = document.createElement("p");
-    paraList[index].className = "card-text";
-
-    // create text nodes for title and text
-    titleNodes[index] = document.createTextNode(`Book Title: ${book.title}`);
-    if (book.read == true) {
-      finished = "Yes";
-    }else { 
-      finished = "No";
-    }
-    paraNodes[index] = document.createTextNode(`Author: ${book.author}\nPages: ${book.pages}\nFinished Reading: ${finished}`);
-
-    // append text nodes to their elements
-    titleList[index].appendChild(titleNodes[index]);
-    paraList[index].appendChild(paraNodes[index]);
-
-    // append elements to their parents
-    bodyList[index].appendChild(titleList[index]);
-    bodyList[index].appendChild(paraList[index]);
-    cardList[index].appendChild(bodyList[index]);
-    document.body.appendChild(cardList[index]); 
-  });
-
-  */
-
 }
 
 function closeForm(){
