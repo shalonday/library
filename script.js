@@ -5,16 +5,67 @@ function Book(title, author, pages, read){
   this.author = author;
   this.pages = pages;
   this.read = read;
-  this.info = function(){
-    let str_init = title + " by " + author + ", " + pages + " pages.";
-    let str_sec;
-    if (read === true)
-      str_sec = " Finished reading.";
-    else if (read === false)
-      str_sec = " Not read yet.";
-    return str_init + str_sec;
+
+  // create card elements (card div, card body div, card title h5, card text p)
+  this.card = document.createElement("div");
+  this.card.className = "card";
+  this.card.style.width = "18rem";
+  this.body = document.createElement("div");
+  this.body.className = "card-body";
+  this.header = document.createElement("h5");
+  this.header.className = "card-title";
+  this.para = document.createElement("p");
+  this.para.className = "card-text";
+
+  // create text nodes for title and text
+  let finished;
+  this.titleNode = document.createTextNode(`Book Title: ${this.title}`);
+  if (this.read == true) {
+    finished = "Yes";
+  }else { 
+    finished = "No";
   }
+  this.paraNode = document.createTextNode(`Author: ${this.author}\nPages: ${this.pages}\nFinished Reading: ${finished}`);
+
+  // append text nodes to their elements
+  this.header.appendChild(this.titleNode);
+  this.para.appendChild(this.paraNode);
+
+  // append elements to their parents
+  this.body.appendChild(this.header);
+  this.body.appendChild(this.para);
+  this.card.appendChild(this.body);
+   
 }
+//tasks: 
+//define Book.prototype.display
+//define Book.prototype.removeBookFromLibrary
+//define DOM elements for each book in the book constructor
+Book.prototype.info = function(){
+  let str_init = this.title + " by " + this.author + ", " + this.pages + " pages.";
+  let str_sec;
+  if (this.read === true)
+    str_sec = " Finished reading.";
+  else if (this.read === false)
+    str_sec = " Not read yet.";
+  return str_init + str_sec;
+}
+
+Book.prototype.display = function(){
+  // by appending card to body, it is displayed.
+  document.body.appendChild(this.card);
+}
+
+Book.prototype.removeBookFromLibrary = function (){
+  //find book in library where title == this.title then pop
+  let book = library.find(function(book){
+    if (book.title == this.title){
+      return true;
+    }
+  });
+  
+}
+
 function openForm(){
     // display form and hide this button
     document.getElementById("form").style.display = "block";
@@ -55,7 +106,8 @@ function addBookFromForm(){
   }
 
   addBookToLibrary(title,author,pages,read);
-  closeForm(); // doesn't work kapag nasa pinakababa nakadefine yung closeForm() function. why???
+  closeForm(); 
+  displayLibrary();
 }
 
 function addBookToLibrary(title, author, pages, read){
@@ -72,6 +124,7 @@ function addBookToLibrary(title, author, pages, read){
 function displayLibrary(){
   clearDisplay();
 
+  /*
   let cardList = [];  // card divs
   let bodyList = [];  // card-body divs
   let titleList = []; // h5's
@@ -79,6 +132,14 @@ function displayLibrary(){
   let paraNodes = []; // text nodes for paras
   let titleNodes = [];// text nodes for titles
   let finished;
+  */
+
+  library.forEach(function(book){
+    book.display();
+  });
+
+  /*
+
   library.forEach(function(book, index, arr){
     // create card elements (card div, card body div, card title h5, card text p)
     cardList[index] = document.createElement("div");
@@ -110,6 +171,8 @@ function displayLibrary(){
     cardList[index].appendChild(bodyList[index]);
     document.body.appendChild(cardList[index]); 
   });
+
+  */
 
 }
 
